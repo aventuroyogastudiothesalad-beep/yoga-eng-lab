@@ -3,85 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoga Sequencing Builder</title>
+    <title>Yoga Studio PRO - Metodo ML</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
-        @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
-        .tooltip-trigger { position: relative; }
-        .tooltip-content { display: none; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); width: 200px; background: #1c1917; color: white; padding: 10px; border-radius: 8px; z-index: 50; font-size: 11px; shadow: xl; }
+        @media print { .no-print { display: none !important; } }
+        .drag-handle { cursor: grab; }
+        .drag-handle:active { cursor: grabbing; }
+        .sortable-ghost { opacity: 0.3; background: #e0e7ff; }
+        
+        /* Progress Bar Animation */
+        #progress-bar { transition: width 0.5s ease-in-out, background-color 0.5s ease; }
+        
         .tooltip-trigger:hover .tooltip-content { display: block; }
-        .block-item:hover .delete-btn { opacity: 1; }
+        .tooltip-content { display: none; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); width: 200px; background: #1c1917; color: white; padding: 10px; border-radius: 8px; z-index: 50; font-size: 11px; }
     </style>
 </head>
 <body class="bg-stone-100 text-stone-800 font-sans p-4 md:p-8">
 
-    <header class="max-w-4xl mx-auto flex justify-between items-start mb-8 no-print">
+    <header class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 no-print gap-4">
         <div>
-            <h1 class="text-2xl font-light tracking-[0.2em] uppercase italic text-indigo-900">Yoga Sequencing Builder</h1>
-            <p class="text-[9px] text-stone-500 uppercase tracking-widest mt-1">Metodo de Elena Vallenilla Applicacion de Mariateresa Linsalata</p>
+            <h1 class="text-2xl font-light tracking-[0.2em] uppercase italic text-indigo-900">Eleva Tu Yoga</h1>
+            <p class="text-[9px] text-stone-500 uppercase tracking-widest mt-1">Metodo Mariateresa Linsalata</p>
         </div>
-        <div class="flex flex-col items-end gap-2">
-            <div class="bg-white px-4 py-1 rounded-full shadow-sm border border-indigo-100">
-                <span id="totalTime" class="text-xl font-mono font-bold text-indigo-600">0</span>
-                <span class="text-[10px] uppercase text-stone-400 font-bold ml-1">min</span>
+        
+        <div class="flex flex-col items-center w-full md:w-64">
+            <div class="flex justify-between w-full mb-1 px-1">
+                <span class="text-[10px] font-bold text-stone-400 uppercase">Progresso Lezione</span>
+                <span class="text-[10px] font-bold text-indigo-600 uppercase"><span id="totalTime">0</span> / 60 min</span>
+            </div>
+            <div class="w-full bg-stone-200 rounded-full h-3 overflow-hidden border border-stone-300">
+                <div id="progress-bar" class="bg-indigo-500 h-full w-0"></div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <main class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         <aside class="lg:col-span-1 space-y-6 no-print">
             <section class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
                 <h2 class="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-4 text-center">Gestione Sessioni</h2>
                 <div class="space-y-3">
-                    <input id="save-name" type="text" placeholder="Nome lezione (es. Lunedì)" class="w-full text-sm p-2 border rounded-lg focus:ring-1 focus:ring-indigo-400 outline-none">
-                    <button onclick="saveToArchive()" class="w-full bg-indigo-600 text-white text-xs py-3 rounded-lg font-bold hover:bg-indigo-700 transition">GUARDAR CLASE</button>
+                    <input id="save-name" type="text" placeholder="Nome lezione (es. Vinyasa Flow)" class="w-full text-sm p-2 border rounded-lg outline-none focus:ring-1 focus:ring-indigo-400">
+                    <button onclick="saveToArchive()" class="w-full bg-indigo-600 text-white text-xs py-3 rounded-lg font-bold hover:bg-indigo-700 transition shadow-md">GUARDAR CLASE</button>
                     <button onclick="resetApp()" class="w-full border border-stone-200 text-stone-400 text-[10px] py-2 rounded-lg font-bold hover:bg-stone-50 transition">RESET / NUOVA</button>
                 </div>
                 
                 <div class="mt-8">
                     <h3 class="text-[9px] font-bold uppercase text-stone-400 mb-3 border-b pb-1">Lezioni Salvate</h3>
-                    <ul id="archive-list" class="space-y-2 max-h-60 overflow-y-auto">
-                        </ul>
+                    <ul id="archive-list" class="space-y-2 max-h-48 overflow-y-auto text-xs text-stone-600"></ul>
                 </div>
+            </section>
+
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                <h2 class="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-3">Musica / Playlist</h2>
+                <input id="playlist-link" type="text" placeholder="Incolla link Spotify/YouTube" class="w-full text-xs p-2 bg-stone-50 border rounded-lg outline-none mb-2">
+                <button onclick="openPlaylist()" class="w-full bg-green-500 text-white text-[10px] py-2 rounded-lg font-bold hover:bg-green-600 transition">APRI PLAYLIST</button>
             </section>
         </aside>
 
         <div class="lg:col-span-2 space-y-6">
             <section class="bg-indigo-900 text-white p-6 rounded-2xl shadow-xl">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <input id="focus-espiritual" type="text" placeholder="Enfoque Espiritual" class="bg-indigo-800/50 border-none rounded-lg p-2 text-sm placeholder-indigo-400 outline-none">
-                    <input id="focus-fisico" type="text" placeholder="Enfoque Físico" class="bg-indigo-800/50 border-none rounded-lg p-2 text-sm placeholder-indigo-400 outline-none">
+                    <div>
+                        <label class="text-[8px] uppercase text-indigo-300 ml-1">Enfoque Espiritual</label>
+                        <input id="focus-espiritual" type="text" placeholder="..." class="w-full bg-indigo-800/50 border-none rounded-lg p-2 text-sm outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[8px] uppercase text-indigo-300 ml-1">Enfoque Físico</label>
+                        <input id="focus-fisico" type="text" placeholder="..." class="w-full bg-indigo-800/50 border-none rounded-lg p-2 text-sm outline-none">
+                    </div>
                 </div>
-                <textarea id="spiritual-intent" class="w-full bg-indigo-800/50 border-none rounded-lg p-3 text-sm placeholder-indigo-400 h-20 resize-none outline-none mb-3" placeholder="Reflexión de la clase..."></textarea>
-                <input id="postura-pico-name" type="text" placeholder="Postura Pico" class="w-full bg-white/10 border-none rounded-lg p-2 text-sm font-bold text-indigo-200">
+                <label class="text-[8px] uppercase text-indigo-300 ml-1">Reflexión / Notas</label>
+                <textarea id="spiritual-intent" class="w-full bg-indigo-800/50 border-none rounded-lg p-3 text-sm h-16 resize-none outline-none mb-3" placeholder="..."></textarea>
+                <label class="text-[8px] uppercase text-indigo-300 ml-1 font-bold">Postura Pico</label>
+                <input id="postura-pico-name" type="text" class="w-full bg-white/10 border-none rounded-lg p-2 text-sm font-bold text-indigo-200 outline-none">
             </section>
 
-            <div id="builder" class="space-y-3">
-                </div>
+            <div id="builder" class="space-y-3"></div>
 
-            <button onclick="addNewBlock()" class="no-print w-full py-4 border-2 border-dashed border-stone-300 rounded-xl text-stone-400 text-xs font-bold hover:bg-stone-200 hover:border-stone-400 transition">
+            <button onclick="addNewBlock()" class="no-print w-full py-4 border-2 border-dashed border-stone-300 rounded-xl text-stone-400 text-xs font-bold hover:bg-stone-200 transition">
                 + AGGIUNGI FASE PERSONALIZZATA
             </button>
             
-            <button onclick="window.print()" class="no-print w-full bg-stone-800 text-white py-4 rounded-xl font-bold shadow-lg mt-4">
-                STAMPA / GENERA PDF
+            <button onclick="window.print()" class="no-print w-full bg-stone-800 text-white py-4 rounded-xl font-bold shadow-lg mt-4 uppercase tracking-widest text-sm">
+                STAMPA GUIDA LEZIONE
             </button>
         </div>
     </main>
 
     <script>
         let currentBlocks = [
-            { title: "Introducción", min: 4, tip: "Seguridad y tema", placeholder: "Bienvenida..." },
-            { title: "Pranayama", min: 4, tip: "Respiración", placeholder: "Ujjayi..." },
-            { title: "Warm up", min: 5, tip: "Lubricación", placeholder: "Gato-vaca..." },
-            { title: "Surya A", min: 10, tip: "Calor", placeholder: "Saludos al sol..." },
-            { title: "Surya B", min: 10, tip: "Fuerza", placeholder: "Guerreros..." },
-            { title: "Peak Pose", min: 12, tip: "Cenit", placeholder: "Progressione..." },
-            { title: "Hip Opening", min: 6, tip: "Apertura", placeholder: "Paloma..." },
-            { title: "Backbends", min: 6, tip: "Arcos", placeholder: "Ustrasana..." },
-            { title: "Cool Down", min: 5, tip: "Enfriamiento", placeholder: "Torsiones..." },
-            { title: "Savasana", min: 7, tip: "Integración", placeholder: "Silencio..." }
+            { title: "Introducción", min: 4, tip: "Seguridad y tema" },
+            { title: "Pranayama", min: 4, tip: "Respiración" },
+            { title: "Warm up", min: 5, tip: "Lubricación" },
+            { title: "Surya A", min: 10, tip: "Calor progresivo" },
+            { title: "Surya B", min: 10, tip: "Fuerza y preparación" },
+            { title: "Peak Pose & Balance", min: 12, tip: "Cenit de la clase" },
+            { title: "Hip Opening", min: 6, tip: "Apertura profunda" },
+            { title: "Backbends", min: 6, tip: "Apertura de pecho" },
+            { title: "Cool Down", min: 5, tip: "Estiramiento final" },
+            { title: "Savasana", min: 7, tip: "Relajación total" }
         ];
 
         function renderBlocks() {
@@ -89,28 +111,43 @@
             container.innerHTML = '';
             currentBlocks.forEach((b, i) => {
                 const div = document.createElement('div');
-                div.className = "block-item bg-white p-4 rounded-xl shadow-sm border border-stone-200 relative group";
+                div.className = "block-item bg-white p-4 rounded-xl shadow-sm border border-stone-200 relative";
+                div.dataset.index = i;
                 div.innerHTML = `
-                    <button onclick="removeBlock(${i})" class="no-print delete-btn opacity-0 absolute -left-3 top-4 bg-red-100 text-red-500 rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-500 hover:text-white transition">×</button>
-                    <div class="flex justify-between items-center mb-2">
+                    <div class="no-print drag-handle absolute -left-2 top-1/2 -translate-y-1/2 p-2 text-stone-300 hover:text-indigo-500">
+                        <svg width="12" height="20" viewBox="0 0 10 16"><circle cx="2" cy="2" r="1.5" fill="currentColor"/><circle cx="2" cy="8" r="1.5" fill="currentColor"/><circle cx="2" cy="14" r="1.5" fill="currentColor"/><circle cx="8" cy="2" r="1.5" fill="currentColor"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="14" r="1.5" fill="currentColor"/></svg>
+                    </div>
+                    <button onclick="removeBlock(${i})" class="no-print absolute -right-2 -top-2 bg-white text-stone-300 hover:text-red-500 border rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-sm transition">×</button>
+                    
+                    <div class="flex justify-between items-center mb-2 ml-4">
                         <div class="tooltip-trigger flex items-center gap-2 cursor-help">
-                            <span class="text-[9px] font-bold text-indigo-400">${(i+1).toString().padStart(2,'0')}</span>
-                            <input type="text" value="${b.title}" oninput="currentBlocks[${i}].title=this.value" class="text-[10px] font-black uppercase tracking-widest text-indigo-900 border-none p-0 focus:ring-0 w-40">
-                            <span class="text-indigo-200 text-xs no-print">ⓘ</span>
-                            <div class="tooltip-content">${b.tip || 'Fase personalizada'}</div>
+                            <input type="text" value="${b.title}" oninput="currentBlocks[${i}].title=this.value" class="text-[10px] font-black uppercase tracking-[0.1em] text-indigo-900 border-none p-0 focus:ring-0 w-48 outline-none">
+                            <div class="tooltip-content">${b.tip || 'Fase libera'}</div>
                         </div>
                         <div class="flex items-center gap-1 no-print">
-                            <input type="number" value="${b.min}" oninput="updateTime(${i}, this.value)" class="min-input w-8 text-right font-bold text-indigo-600 outline-none">
-                            <span class="text-[9px] text-stone-300 font-bold uppercase">min</span>
+                            <input type="number" value="${b.min}" oninput="updateTime(${i}, this.value)" class="min-input w-8 text-right font-bold text-indigo-600 outline-none bg-transparent">
+                            <span class="text-[9px] text-stone-400 font-bold uppercase">min</span>
                         </div>
                     </div>
-                    <textarea oninput="updateText(${i}, this.value)" class="w-full h-16 text-sm p-2 bg-stone-50 rounded border-none focus:ring-1 focus:ring-indigo-100 resize-none mb-1 outline-none" placeholder="${b.placeholder || 'Dettagli...'}">${b.text || ''}</textarea>
-                    <input type="text" value="${b.counter || ''}" oninput="updateCounter(${i}, this.value)" class="w-full text-[10px] p-2 bg-orange-50/30 border-dashed border border-orange-100 rounded italic placeholder-orange-300 outline-none" placeholder="Contropostura / Compensación...">
+                    <textarea oninput="updateText(${i}, this.value)" class="ml-4 w-[calc(100%-1rem)] h-14 text-sm p-2 bg-stone-50 rounded-lg border-none focus:ring-1 focus:ring-indigo-100 resize-none outline-none" placeholder="Dettagli asana...">${b.text || ''}</textarea>
+                    <input type="text" value="${b.counter || ''}" oninput="updateCounter(${i}, this.value)" class="ml-4 w-[calc(100%-1rem)] text-[10px] p-2 bg-orange-50/20 border-dashed border border-orange-100 rounded italic placeholder-orange-300 outline-none" placeholder="Contropostura / Compensación...">
                 `;
                 container.appendChild(div);
             });
             updateTotal();
         }
+
+        // Funzione Drag & Drop
+        new Sortable(document.getElementById('builder'), {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            onEnd: function (evt) {
+                const movedItem = currentBlocks.splice(evt.oldIndex, 1)[0];
+                currentBlocks.splice(evt.newIndex, 0, movedItem);
+                renderBlocks();
+            },
+        });
 
         function updateTime(i, val) { currentBlocks[i].min = parseInt(val) || 0; updateTotal(); }
         function updateText(i, val) { currentBlocks[i].text = val; }
@@ -119,10 +156,20 @@
         function updateTotal() {
             const total = currentBlocks.reduce((acc, curr) => acc + (parseInt(curr.min) || 0), 0);
             document.getElementById('totalTime').innerText = total;
+            
+            // Aggiorna Barra di Progresso
+            const bar = document.getElementById('progress-bar');
+            let percent = (total / 60) * 100;
+            bar.style.width = Math.min(percent, 100) + '%';
+            
+            // Cambia colore se superi i 60 min
+            if(total > 60) bar.style.backgroundColor = "#ef4444";
+            else if (total === 60) bar.style.backgroundColor = "#10b981";
+            else bar.style.backgroundColor = "#6366f1";
         }
 
         function addNewBlock() {
-            currentBlocks.push({ title: "NUEVA FASE", min: 5, text: "", counter: "", tip: "Fase personalizzata aggiunta da te" });
+            currentBlocks.push({ title: "NUOVA FASE", min: 5, text: "", counter: "", tip: "Fase personalizzata" });
             renderBlocks();
         }
 
@@ -131,64 +178,67 @@
             renderBlocks();
         }
 
+        function openPlaylist() {
+            const link = document.getElementById('playlist-link').value;
+            if(link) window.open(link, '_blank');
+            else alert("Incolla prima un link!");
+        }
+
         function resetApp() {
-            if(confirm("Vuoi svuotare tutto e iniziare una nuova lezione?")) {
-                localStorage.removeItem('yoga_eleva_current');
+            if(confirm("Vuoi iniziare una nuova lezione?")) {
+                localStorage.removeItem('yoga_pro_current');
                 location.reload();
             }
         }
 
-        // --- GESTIONE ARCHIVIO ---
         function saveToArchive() {
             const name = document.getElementById('save-name').value || "Classe senza nome";
             const fullData = {
-                name: name,
+                name,
                 espiritual: document.getElementById('focus-espiritual').value,
                 fisico: document.getElementById('focus-fisico').value,
                 intent: document.getElementById('spiritual-intent').value,
                 pico: document.getElementById('postura-pico-name').value,
+                playlist: document.getElementById('playlist-link').value,
                 blocks: currentBlocks,
                 date: new Date().toLocaleDateString()
             };
-            let archive = JSON.parse(localStorage.getItem('yoga_archive') || '[]');
+            let archive = JSON.parse(localStorage.getItem('yoga_archive_v3') || '[]');
             archive.push(fullData);
-            localStorage.setItem('yoga_archive', JSON.stringify(archive));
-            alert("Lezione salvata in archivio!");
+            localStorage.setItem('yoga_archive_v3', JSON.stringify(archive));
             renderArchive();
         }
 
         function renderArchive() {
             const list = document.getElementById('archive-list');
-            const archive = JSON.parse(localStorage.getItem('yoga_archive') || '[]');
+            const archive = JSON.parse(localStorage.getItem('yoga_archive_v3') || '[]');
             list.innerHTML = archive.map((item, i) => `
-                <li class="flex justify-between items-center bg-stone-50 p-2 rounded border border-stone-100 group">
-                    <button onclick="loadFromArchive(${i})" class="text-[11px] font-bold text-stone-600 hover:text-indigo-600 text-left truncate w-40">
-                        ${item.name} <span class="block text-[8px] font-normal text-stone-400">${item.date}</span>
-                    </button>
-                    <button onclick="deleteFromArchive(${i})" class="opacity-0 group-hover:opacity-100 text-red-400 text-xs px-2">×</button>
+                <li class="flex justify-between items-center bg-stone-50 p-2 rounded border border-stone-100 group mb-1">
+                    <button onclick="loadFromArchive(${i})" class="font-bold text-stone-600 hover:text-indigo-600 truncate w-32 text-left">${item.name}</button>
+                    <button onclick="deleteFromArchive(${i})" class="text-red-300 hover:text-red-500">×</button>
                 </li>
             `).join('');
         }
 
         function loadFromArchive(i) {
-            const archive = JSON.parse(localStorage.getItem('yoga_archive'));
+            const archive = JSON.parse(localStorage.getItem('yoga_archive_v3'));
             const data = archive[i];
-            document.getElementById('focus-espiritual').value = data.espiritual;
-            document.getElementById('focus-fisico').value = data.fisico;
-            document.getElementById('spiritual-intent').value = data.intent;
-            document.getElementById('postura-pico-name').value = data.pico;
+            document.getElementById('focus-espiritual').value = data.espiritual || '';
+            document.getElementById('focus-fisico').value = data.fisico || '';
+            document.getElementById('spiritual-intent').value = data.intent || '';
+            document.getElementById('postura-pico-name').value = data.pico || '';
+            document.getElementById('playlist-link').value = data.playlist || '';
             currentBlocks = data.blocks;
             renderBlocks();
         }
 
         function deleteFromArchive(i) {
-            let archive = JSON.parse(localStorage.getItem('yoga_archive'));
+            let archive = JSON.parse(localStorage.getItem('yoga_archive_v3'));
             archive.splice(i, 1);
-            localStorage.setItem('yoga_archive', JSON.stringify(archive));
+            localStorage.setItem('yoga_archive_v3', JSON.stringify(archive));
             renderArchive();
         }
 
-        // Inizializzazione
         renderBlocks();
         renderArchive();
     </script>

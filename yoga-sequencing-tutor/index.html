@@ -3,171 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoga Builder - Aventuro yoga studio ft. Eleva Yoga</title>
+    <title>Yoga Studio Manager - Metodo ML</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @media print { .no-print { display: none !important; } }
-        
-        /* FIX TOOLTIP: Ora appare sopra e non copre il testo */
+        @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
         .tooltip-trigger { position: relative; }
-        .tooltip-content { 
-            display: none; 
-            position: absolute; 
-            bottom: 120%; /* Lo sposta sopra l'icona */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 220px;
-            background-color: #1c1917;
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            z-index: 50;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            font-size: 11px;
-            line-height: 1.4;
-        }
-        /* Freccetta del fumetto */
-        .tooltip-content::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #1c1917 transparent transparent transparent;
-        }
+        .tooltip-content { display: none; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); width: 200px; background: #1c1917; color: white; padding: 10px; border-radius: 8px; z-index: 50; font-size: 11px; shadow: xl; }
         .tooltip-trigger:hover .tooltip-content { display: block; }
+        .block-item:hover .delete-btn { opacity: 1; }
     </style>
 </head>
 <body class="bg-stone-100 text-stone-800 font-sans p-4 md:p-8">
 
-    <header class="max-w-3xl mx-auto text-center mb-8 no-print">
-        <h1 class="text-3xl font-light tracking-[0.3em] uppercase italic text-indigo-900">Aventuro Yoga Studio ft. Eleva Tu Yoga</h1>
-        <p class="text-[10px] text-stone-500 uppercase tracking-widest mt-2">Mariateresa The Salada Experience</p>
-        
-        <div class="mt-6 flex flex-col items-center gap-2">
-            <div class="bg-white px-6 py-2 rounded-full shadow-sm border border-indigo-100">
-                <span id="totalTime" class="text-2xl font-mono font-bold text-indigo-600">0</span>
-                <span class="text-xs uppercase text-stone-400 font-bold ml-1">min totali</span>
+    <header class="max-w-4xl mx-auto flex justify-between items-start mb-8 no-print">
+        <div>
+            <h1 class="text-2xl font-light tracking-[0.2em] uppercase italic text-indigo-900">Eleva Tu Yoga</h1>
+            <p class="text-[9px] text-stone-500 uppercase tracking-widest mt-1">Metodo Mariateresa Linsalata</p>
+        </div>
+        <div class="flex flex-col items-end gap-2">
+            <div class="bg-white px-4 py-1 rounded-full shadow-sm border border-indigo-100">
+                <span id="totalTime" class="text-xl font-mono font-bold text-indigo-600">0</span>
+                <span class="text-[10px] uppercase text-stone-400 font-bold ml-1">min</span>
             </div>
-            <span class="text-[9px] text-green-600 font-bold tracking-widest">● AUTO-SAVE ACTIVE</span>
         </div>
     </header>
 
-    <main class="max-w-2xl mx-auto">
+    <main class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <section class="bg-indigo-900 text-white p-6 rounded-2xl shadow-xl mb-12 no-print">
-            <h2 class="text-xs font-bold uppercase tracking-[0.2em] text-indigo-300 mb-4 italic">Reflexión Inicial</h2>
-            <div class="space-y-3">
-                <textarea id="spiritual-intent" oninput="saveAll()" class="w-full bg-indigo-800/50 border-none rounded-lg p-3 text-sm placeholder-indigo-400 focus:ring-1 focus:ring-indigo-300 h-16" placeholder="¿Qué conceptos o espiritualidad quieres compartir hoy?"></textarea>
-                <div class="grid grid-cols-2 gap-2">
-                    <input id="focus-fisico" oninput="saveAll()" type="text" placeholder="Enfoque Físico" class="bg-indigo-800/50 border-none rounded-lg p-2 text-xs placeholder-indigo-400">
-                    <input id="postura-pico-name" oninput="saveAll()" type="text" placeholder="Postura Pico (Ej: Bakasana)" class="bg-indigo-800/50 border-none rounded-lg p-2 text-xs placeholder-indigo-400 font-bold">
+        <aside class="lg:col-span-1 space-y-6 no-print">
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                <h2 class="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-4 text-center">Gestione Sessioni</h2>
+                <div class="space-y-3">
+                    <input id="save-name" type="text" placeholder="Nome lezione (es. Lunedì)" class="w-full text-sm p-2 border rounded-lg focus:ring-1 focus:ring-indigo-400 outline-none">
+                    <button onclick="saveToArchive()" class="w-full bg-indigo-600 text-white text-xs py-3 rounded-lg font-bold hover:bg-indigo-700 transition">GUARDAR CLASE</button>
+                    <button onclick="resetApp()" class="w-full border border-stone-200 text-stone-400 text-[10px] py-2 rounded-lg font-bold hover:bg-stone-50 transition">RESET / NUOVA</button>
                 </div>
-            </div>
-        </section>
+                
+                <div class="mt-8">
+                    <h3 class="text-[9px] font-bold uppercase text-stone-400 mb-3 border-b pb-1">Lezioni Salvate</h3>
+                    <ul id="archive-list" class="space-y-2 max-h-60 overflow-y-auto">
+                        </ul>
+                </div>
+            </section>
+        </aside>
 
-        <div id="builder" class="space-y-4"></div>
+        <div class="lg:col-span-2 space-y-6">
+            <section class="bg-indigo-900 text-white p-6 rounded-2xl shadow-xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <input id="focus-espiritual" type="text" placeholder="Enfoque Espiritual" class="bg-indigo-800/50 border-none rounded-lg p-2 text-sm placeholder-indigo-400 outline-none">
+                    <input id="focus-fisico" type="text" placeholder="Enfoque Físico" class="bg-indigo-800/50 border-none rounded-lg p-2 text-sm placeholder-indigo-400 outline-none">
+                </div>
+                <textarea id="spiritual-intent" class="w-full bg-indigo-800/50 border-none rounded-lg p-3 text-sm placeholder-indigo-400 h-20 resize-none outline-none mb-3" placeholder="Reflexión de la clase..."></textarea>
+                <input id="postura-pico-name" type="text" placeholder="Postura Pico" class="w-full bg-white/10 border-none rounded-lg p-2 text-sm font-bold text-indigo-200">
+            </section>
 
+            <div id="builder" class="space-y-3">
+                </div>
+
+            <button onclick="addNewBlock()" class="no-print w-full py-4 border-2 border-dashed border-stone-300 rounded-xl text-stone-400 text-xs font-bold hover:bg-stone-200 hover:border-stone-400 transition">
+                + AGGIUNGI FASE PERSONALIZZATA
+            </button>
+            
+            <button onclick="window.print()" class="no-print w-full bg-stone-800 text-white py-4 rounded-xl font-bold shadow-lg mt-4">
+                STAMPA / GENERA PDF
+            </button>
+        </div>
     </main>
 
-    <footer class="mt-12 text-center no-print pb-20">
-        <button onclick="window.print()" class="bg-indigo-600 text-white px-10 py-4 rounded-full hover:bg-indigo-700 transition shadow-lg font-bold">
-            Imprimir Guía de Clase
-        </button>
-    </footer>
-
     <script>
-        const blocks = [
-            { id: "01", title: "Introducción", min: 4, tip: "Momento para hacer sentir seguros a los alumnos. Preguntar lesiones y presentar el tema brevemente.", placeholder: "Bienvenida, lesiones, tema..." },
-            { id: "02", title: "Pranayama", min: 4, tip: "Guía a respirar por la nariz de manera consciente, pausada e intencional.", placeholder: "Ujjayi, respiración dirigida..." },
-            { id: "03", title: "Warm up", min: 5, tip: "Movimientos dinámicos (Gato-vaca). Activa sistema cardiovascular y lubrica articulazioni.", placeholder: "Gato-vaca, core work suave..." },
-            { id: "04", title: "Surya A", min: 10, tip: "2-3 rondas. Primera detallada, las siguientes fluidas.", placeholder: "Rondas de Saludos al Sol A..." },
-            { id: "05", title: "Surya B", min: 10, tip: "Prepara el cuerpo para el pico. Guerrero 1, High Lunge o Anjaneyasana.", placeholder: "Variaciones de Silla, Warrior I..." },
-            { id: "06", title: "Standing & Balance", min: 12, tip: "¡Cenit de la clase! Progresión coherente. Pico en medio si es clase avanzada para decongestionar.", placeholder: "POSTURA PICO + Equilibrio..." },
-            { id: "07", title: "Apertura de Cadera", min: 6, tip: "Mínimo una postura (Lagarto, Paloma, Baddha Konasana).", placeholder: "Eka Pada Kapotasana, Malasana..." },
-            { id: "08", title: "Arcos", min: 6, tip: "Abre pecho. Mai a freddo! Core attivo per proteggere lumbares.", placeholder: "Ustrasana, Setu Bandhasana..." },
-            { id: "09", title: "Cool Down", min: 5, tip: "Torsioni, flexiones adelante. Restablece el equilibrio.", placeholder: "Torsioni, Janu Sirsasana..." },
-            { id: "10", title: "Savasana", min: 7, tip: "Mínimo 5-7 minutos. Integración física y espiritual.", placeholder: "Silencio, mantra final..." }
+        let currentBlocks = [
+            { title: "Introducción", min: 4, tip: "Seguridad y tema", placeholder: "Bienvenida..." },
+            { title: "Pranayama", min: 4, tip: "Respiración", placeholder: "Ujjayi..." },
+            { title: "Warm up", min: 5, tip: "Lubricación", placeholder: "Gato-vaca..." },
+            { title: "Surya A", min: 10, tip: "Calor", placeholder: "Saludos al sol..." },
+            { title: "Surya B", min: 10, tip: "Fuerza", placeholder: "Guerreros..." },
+            { title: "Peak Pose", min: 12, tip: "Cenit", placeholder: "Progressione..." },
+            { title: "Hip Opening", min: 6, tip: "Apertura", placeholder: "Paloma..." },
+            { title: "Backbends", min: 6, tip: "Arcos", placeholder: "Ustrasana..." },
+            { title: "Cool Down", min: 5, tip: "Enfriamiento", placeholder: "Torsiones..." },
+            { title: "Savasana", min: 7, tip: "Integración", placeholder: "Silencio..." }
         ];
 
-        function saveAll() {
-            const sequenceData = [];
-            document.querySelectorAll('.block-item').forEach((block) => {
-                sequenceData.push({
-                    min: block.querySelector('.min-input').value,
-                    text: block.querySelector('.main-text').value,
-                    counter: block.querySelector('.counter-input').value
-                });
+        function renderBlocks() {
+            const container = document.getElementById('builder');
+            container.innerHTML = '';
+            currentBlocks.forEach((b, i) => {
+                const div = document.createElement('div');
+                div.className = "block-item bg-white p-4 rounded-xl shadow-sm border border-stone-200 relative group";
+                div.innerHTML = `
+                    <button onclick="removeBlock(${i})" class="no-print delete-btn opacity-0 absolute -left-3 top-4 bg-red-100 text-red-500 rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-500 hover:text-white transition">×</button>
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="tooltip-trigger flex items-center gap-2 cursor-help">
+                            <span class="text-[9px] font-bold text-indigo-400">${(i+1).toString().padStart(2,'0')}</span>
+                            <input type="text" value="${b.title}" oninput="currentBlocks[${i}].title=this.value" class="text-[10px] font-black uppercase tracking-widest text-indigo-900 border-none p-0 focus:ring-0 w-40">
+                            <span class="text-indigo-200 text-xs no-print">ⓘ</span>
+                            <div class="tooltip-content">${b.tip || 'Fase personalizada'}</div>
+                        </div>
+                        <div class="flex items-center gap-1 no-print">
+                            <input type="number" value="${b.min}" oninput="updateTime(${i}, this.value)" class="min-input w-8 text-right font-bold text-indigo-600 outline-none">
+                            <span class="text-[9px] text-stone-300 font-bold uppercase">min</span>
+                        </div>
+                    </div>
+                    <textarea oninput="updateText(${i}, this.value)" class="w-full h-16 text-sm p-2 bg-stone-50 rounded border-none focus:ring-1 focus:ring-indigo-100 resize-none mb-1 outline-none" placeholder="${b.placeholder || 'Dettagli...'}">${b.text || ''}</textarea>
+                    <input type="text" value="${b.counter || ''}" oninput="updateCounter(${i}, this.value)" class="w-full text-[10px] p-2 bg-orange-50/30 border-dashed border border-orange-100 rounded italic placeholder-orange-300 outline-none" placeholder="Contropostura / Compensación...">
+                `;
+                container.appendChild(div);
             });
-            const globalData = {
-                intent: document.getElementById('spiritual-intent').value,
-                focus: document.getElementById('focus-fisico').value,
-                pico: document.getElementById('postura-pico-name').value,
-                blocks: sequenceData
-            };
-            localStorage.setItem('yoga_eleva_data', JSON.stringify(globalData));
             updateTotal();
         }
 
-        function loadAll() {
-            const saved = JSON.parse(localStorage.getItem('yoga_eleva_data'));
-            if (!saved) return;
-            document.getElementById('spiritual-intent').value = saved.intent || "";
-            document.getElementById('focus-fisico').value = saved.focus || "";
-            document.getElementById('postura-pico-name').value = saved.pico || "";
-            
-            setTimeout(() => {
-                document.querySelectorAll('.block-item').forEach((block, i) => {
-                    if (saved.blocks[i]) {
-                        block.querySelector('.min-input').value = saved.blocks[i].min;
-                        block.querySelector('.main-text').value = saved.blocks[i].text;
-                        block.querySelector('.counter-input').value = saved.blocks[i].counter;
-                        if(saved.blocks[i].counter.trim() !== "") block.querySelector('.counter-box').classList.remove('no-print');
-                    }
-                });
-                updateTotal();
-            }, 100);
-        }
-
+        function updateTime(i, val) { currentBlocks[i].min = parseInt(val) || 0; updateTotal(); }
+        function updateText(i, val) { currentBlocks[i].text = val; }
+        function updateCounter(i, val) { currentBlocks[i].counter = val; }
+        
         function updateTotal() {
-            let total = 0;
-            document.querySelectorAll('.min-input').forEach(i => total += parseInt(i.value || 0));
+            const total = currentBlocks.reduce((acc, curr) => acc + (parseInt(curr.min) || 0), 0);
             document.getElementById('totalTime').innerText = total;
         }
 
-        const builder = document.getElementById('builder');
-        blocks.forEach((b) => {
-            const div = document.createElement('div');
-            div.className = "block-item bg-white p-5 rounded-xl shadow-sm border border-stone-200 relative mb-4";
-            div.innerHTML = `
-                <div class="flex justify-between items-center mb-2">
-                    <div class="tooltip-trigger flex items-center gap-2 cursor-help">
-                        <h3 class="text-[10px] font-black uppercase tracking-widest text-indigo-500">${b.id}. ${b.title}</h3>
-                        <span class="text-indigo-300 text-xs no-print">ⓘ</span>
-                        <div class="tooltip-content">${b.tip}</div>
-                    </div>
-                    <div class="flex items-center gap-1 no-print">
-                        <input type="number" value="${b.min}" class="min-input w-8 text-right font-bold text-indigo-600 focus:outline-none" oninput="saveAll()">
-                        <span class="text-[9px] text-stone-400 font-bold uppercase">min</span>
-                    </div>
-                </div>
-                <textarea oninput="saveAll()" class="main-text w-full h-20 text-sm p-2 bg-stone-50 rounded border-none focus:ring-1 focus:ring-indigo-100 resize-none mb-1" placeholder="${b.placeholder}"></textarea>
-                <div class="counter-box no-print">
-                    <textarea oninput="handleCounter(this)" class="counter-input w-full h-8 text-[11px] p-2 bg-orange-50/20 border-dashed border border-orange-100 rounded italic placeholder-orange-300 focus:ring-0" placeholder="Contropostura (opzionale)..."></textarea>
-                </div>
-            `;
-            builder.appendChild(div);
-        });
-
-        function handleCounter(el) {
-            if(el.value.trim() === "") el.parentElement.classList.add('no-print');
-            else el.parentElement.classList.remove('no-print');
-            saveAll();
+        function addNewBlock() {
+            currentBlocks.push({ title: "NUEVA FASE", min: 5, text: "", counter: "", tip: "Fase personalizzata aggiunta da te" });
+            renderBlocks();
         }
 
-        loadAll();
+        function removeBlock(i) {
+            currentBlocks.splice(i, 1);
+            renderBlocks();
+        }
+
+        function resetApp() {
+            if(confirm("Vuoi svuotare tutto e iniziare una nuova lezione?")) {
+                localStorage.removeItem('yoga_eleva_current');
+                location.reload();
+            }
+        }
+
+        // --- GESTIONE ARCHIVIO ---
+        function saveToArchive() {
+            const name = document.getElementById('save-name').value || "Classe senza nome";
+            const fullData = {
+                name: name,
+                espiritual: document.getElementById('focus-espiritual').value,
+                fisico: document.getElementById('focus-fisico').value,
+                intent: document.getElementById('spiritual-intent').value,
+                pico: document.getElementById('postura-pico-name').value,
+                blocks: currentBlocks,
+                date: new Date().toLocaleDateString()
+            };
+            let archive = JSON.parse(localStorage.getItem('yoga_archive') || '[]');
+            archive.push(fullData);
+            localStorage.setItem('yoga_archive', JSON.stringify(archive));
+            alert("Lezione salvata in archivio!");
+            renderArchive();
+        }
+
+        function renderArchive() {
+            const list = document.getElementById('archive-list');
+            const archive = JSON.parse(localStorage.getItem('yoga_archive') || '[]');
+            list.innerHTML = archive.map((item, i) => `
+                <li class="flex justify-between items-center bg-stone-50 p-2 rounded border border-stone-100 group">
+                    <button onclick="loadFromArchive(${i})" class="text-[11px] font-bold text-stone-600 hover:text-indigo-600 text-left truncate w-40">
+                        ${item.name} <span class="block text-[8px] font-normal text-stone-400">${item.date}</span>
+                    </button>
+                    <button onclick="deleteFromArchive(${i})" class="opacity-0 group-hover:opacity-100 text-red-400 text-xs px-2">×</button>
+                </li>
+            `).join('');
+        }
+
+        function loadFromArchive(i) {
+            const archive = JSON.parse(localStorage.getItem('yoga_archive'));
+            const data = archive[i];
+            document.getElementById('focus-espiritual').value = data.espiritual;
+            document.getElementById('focus-fisico').value = data.fisico;
+            document.getElementById('spiritual-intent').value = data.intent;
+            document.getElementById('postura-pico-name').value = data.pico;
+            currentBlocks = data.blocks;
+            renderBlocks();
+        }
+
+        function deleteFromArchive(i) {
+            let archive = JSON.parse(localStorage.getItem('yoga_archive'));
+            archive.splice(i, 1);
+            localStorage.setItem('yoga_archive', JSON.stringify(archive));
+            renderArchive();
+        }
+
+        // Inizializzazione
+        renderBlocks();
+        renderArchive();
     </script>
 </body>
 </html>

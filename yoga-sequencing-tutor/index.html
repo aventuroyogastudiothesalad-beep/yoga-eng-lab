@@ -21,6 +21,12 @@
         .check-pill { cursor: pointer; transition: all 0.2s; border: 1px solid #e5e7eb; font-size: 9px; padding: 2px 8px; border-radius: 12px; background: white; }
         .check-pill.active { background: #1e1b4b; color: white; border-color: #1e1b4b; }
         .library-item:hover .delete-btn { opacity: 1; }
+        
+        /* Efecto de brillo para el logo */
+        .logo-container {
+            box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.4), 0 8px 10px -6px rgba(30, 27, 75, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans p-4 md:p-8">
@@ -35,8 +41,8 @@
 
     <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 no-print gap-6 border-b border-stone-200 pb-8">
         <div class="flex items-center gap-6">
-            <div class="w-24 h-24 bg-indigo-950 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl overflow-hidden">
-                <img src="logo_grande.png" alt="YB" onerror="this.parentElement.innerHTML='YB'">
+            <div class="w-24 h-24 bg-indigo-950 rounded-2xl flex items-center justify-center shadow-xl overflow-hidden logo-container">
+                <img src="logo_grande.png" alt="Logo" class="w-full h-full object-cover">
             </div>
             <div>
                 <h1 class="text-3xl font-light tracking-tighter uppercase text-indigo-950">Yoga Sequence <span class="font-black italic">Builder</span></h1>
@@ -121,7 +127,6 @@
     </main>
 
     <script>
-        // BLOQUES INICIALES (10 PASOS LAB)
         const defaultBlocks = [
             { title: "Introduction", min: 5, text: "" },
             { title: "Centering & Pranayama", min: 5, text: "" },
@@ -187,12 +192,10 @@
             const bar = document.getElementById('progress-bar');
             let percentage = (total / 60) * 100;
             bar.style.width = Math.min(percentage, 100) + '%';
-            
-            // Lógica de colores degradados a verde
-            if (total >= 60) bar.style.backgroundColor = "#22c55e"; // Verde éxito
-            else if (total > 45) bar.style.backgroundColor = "#4f46e5"; // Indigo
-            else if (total > 30) bar.style.backgroundColor = "#818cf8"; // Azul medio
-            else bar.style.backgroundColor = "#c7d2fe"; // Azul claro
+            if (total >= 60) bar.style.backgroundColor = "#22c55e";
+            else if (total > 45) bar.style.backgroundColor = "#4f46e5";
+            else if (total > 30) bar.style.backgroundColor = "#818cf8";
+            else bar.style.backgroundColor = "#c7d2fe";
         }
 
         function autoResize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
@@ -201,8 +204,6 @@
         function removeBlock(i) { currentBlocks.splice(i, 1); renderBlocks(); autoSaveCurrent(); }
         function addNewBlock() { currentBlocks.push({ title: "Custom Phase", min: 5, text: "", showCounter: false }); renderBlocks(); autoSaveCurrent(); }
         function togglePill(el) { el.classList.toggle('active'); autoSaveCurrent(); }
-
-        // --- SISTEMA DE LIBRERÍA Y BORRADO ---
 
         function resetWorkspace() {
             if(confirm("¿Quieres limpiar la mesa de trabajo? (No borrará tus clases guardadas)")) {
@@ -234,7 +235,6 @@
         function saveCurrentToLibrary() {
             const name = document.getElementById('save-name').value.trim();
             if (!name) { alert("Ponle un nombre a la clase"); return; }
-            
             let library = JSON.parse(localStorage.getItem('yoga_library')) || {};
             library[name] = {
                 blocks: JSON.parse(JSON.stringify(currentBlocks)),
@@ -250,7 +250,6 @@
                 },
                 date: new Date().toLocaleDateString()
             };
-            
             localStorage.setItem('yoga_library', JSON.stringify(library));
             document.getElementById('save-name').value = "";
             renderLibrary();
@@ -282,7 +281,6 @@
             const library = JSON.parse(localStorage.getItem('yoga_library'));
             const data = library[name];
             if (!data) return;
-
             currentBlocks = data.blocks;
             document.getElementById('method-type').value = data.meta.type;
             document.getElementById('target-name').value = data.meta.target;
@@ -290,17 +288,15 @@
             document.getElementById('meta-estabilidad').value = data.meta.estabilidad;
             document.getElementById('meta-patrones').value = data.meta.patrones;
             document.getElementById('ana-counter').value = data.meta.counter;
-
             document.querySelectorAll('.check-pill').forEach(p => p.classList.remove('active'));
-            data.meta.pillsApertura.forEach(text => {
+            (data.meta.pillsApertura || []).forEach(text => {
                 const p = Array.from(document.querySelectorAll('#pills-apertura .check-pill')).find(el => el.innerText === text);
                 if(p) p.classList.add('active');
             });
-            data.meta.pillsEstabilidad.forEach(text => {
+            (data.meta.pillsEstabilidad || []).forEach(text => {
                 const p = Array.from(document.querySelectorAll('#pills-estabilidad .check-pill')).find(el => el.innerText === text);
                 if(p) p.classList.add('active');
             });
-
             renderBlocks();
             autoSaveCurrent();
         }
@@ -324,12 +320,14 @@
                 document.getElementById('meta-estabilidad').value = autosave.meta.estabilidad || '';
                 document.getElementById('meta-patrones').value = autosave.meta.patrones || '';
                 document.getElementById('ana-counter').value = autosave.meta.counter || '';
-                if(autosave.meta.pillsApertura) {
-                    autosave.meta.pillsApertura.forEach(text => {
-                        const p = Array.from(document.querySelectorAll('#pills-apertura .check-pill')).find(el => el.innerText === text);
-                        if(p) p.classList.add('active');
-                    });
-                }
+                (autosave.meta.pillsApertura || []).forEach(text => {
+                    const p = Array.from(document.querySelectorAll('#pills-apertura .check-pill')).find(el => el.innerText === text);
+                    if(p) p.classList.add('active');
+                });
+                (autosave.meta.pillsEstabilidad || []).forEach(text => {
+                    const p = Array.from(document.querySelectorAll('#pills-estabilidad .check-pill')).find(el => el.innerText === text);
+                    if(p) p.classList.add('active');
+                });
             }
             renderLibrary();
             renderBlocks();

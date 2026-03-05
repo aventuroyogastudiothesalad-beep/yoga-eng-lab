@@ -366,7 +366,7 @@
 
             const imgData = 'favicon.png';
             try {
-                doc.addImage(imgData, 'PNG', margin, y - 5, 15, 15);
+                doc.addImage(imgData, 'PNG');
             } catch (e) { console.warn("Logo no disponible."); }
 
             doc.setFont("times", "bolditalic");

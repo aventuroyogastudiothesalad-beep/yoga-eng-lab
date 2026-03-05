@@ -365,9 +365,16 @@
             const pageWidth = 170;
 
             const imgData = 'favicon.png';
+            const img = new Image();
+            img.src = imgData;
+            img.onload = () => {
+            const imgWidth = 15; // larghezza desiderata in mm
+            const imgHeight = (img.height / img.width) * imgWidth; // mantiene le proporzioni
             try {
-                doc.addImage(imgData, 'PNG', margin, y - 5, 15, 15);
-            } catch (e) { console.warn("Logo no disponible."); }
+        doc.addImage(img, 'PNG', margin, y - 5, imgWidth, imgHeight);
+    } catch (e) {
+        console.warn("Logo no disponible.");
+    }
 
             doc.setFont("times", "bolditalic");
             doc.setFontSize(22);

@@ -3,120 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoga Sequencing Builder</title>
-    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Yoga Sequence Builder</title>
+    <link rel="icon" type="image/png" href="logo_grande.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
         @media print {
-            @page { margin: 2cm; }
-            body { background: white !important; font-size: 11pt; color: black; }
             .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            main { display: block !important; width: 100%; max-width: 100% !important; margin: 0 !important; }
-            section { border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 20px !important; }
-            #print-header { display: flex !important; border-bottom: 1.5pt solid #000; padding-bottom: 10px; margin-bottom: 30px; }
-            .block-item { page-break-inside: avoid; border-bottom: 0.5pt solid #eee !important; padding: 15px 0 !important; }
-            .block-item textarea { border: none !important; height: auto !important; font-family: serif; font-size: 11pt; white-space: pre-wrap; }
-            .counter-title-print { font-weight: bold; text-transform: uppercase; font-size: 8pt; margin-top: 8px; display: block; }
-            .counter-box-print { border-left: 2pt solid #f97316 !important; padding-left: 10px; font-style: italic; color: #555 !important; }
+            body { background: white !important; font-size: 10pt; color: black; }
+            #print-header { display: flex !important; align-items: center; border-bottom: 2pt solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+            .block-item { page-break-inside: avoid; border-bottom: 1pt solid #eee !important; padding: 15px 0 !important; }
         }
         .print-only { display: none; }
         .drag-handle { cursor: grab; }
-        #progress-bar { transition: width 0.6s ease, background-color 0.6s ease; }
-        .counter-box-app { background-color: rgba(249, 115, 22, 0.05); border: 1px dashed #fdba74; }
+        .step-number { background: #1e1b4b; color: white; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 11px; font-weight: bold; flex-shrink: 0; }
+        #progress-bar { transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .check-pill { cursor: pointer; transition: all 0.2s; border: 1px solid #e5e7eb; font-size: 9px; padding: 2px 8px; border-radius: 12px; background: white; }
+        .check-pill.active { background: #1e1b4b; color: white; border-color: #1e1b4b; }
     </style>
 </head>
-<body class="bg-stone-100 text-stone-800 font-sans p-4 md:p-8">
+<body class="bg-stone-50 text-stone-800 font-sans p-4 md:p-8">
 
     <div id="print-header" class="print-only">
-        <div style="flex: 1;">
-            <h1 style="font-size: 22pt; text-transform: uppercase; letter-spacing: 4px; color: #000; font-family: serif;">Yoga Sequencing Builder</h1>
-            <p style="font-size: 10pt; text-transform: uppercase; letter-spacing: 2px; color: #444;">Elena y Mariateresa</p>
+        <img src="logo_grande.png" style="width: 50px; height: 50px; margin-right: 20px; border-radius: 8px;">
+        <div>
+            <h1 style="font-size: 20pt; text-transform: uppercase; font-family: serif; margin: 0;">Yoga Sequence Builder</h1>
+            <p style="font-size: 9pt; color: #666;">Elena y Mariateresa • Lab Edition 2026</p>
         </div>
-        <div style="text-align: right;"><p id="print-date" style="font-size: 10pt; color: #666;"></p></div>
     </div>
 
-    <header class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 no-print gap-6 border-b border-stone-200 pb-6">
-        <div class="text-center md:text-left">
-            <h1 class="text-2xl font-light tracking-[0.2em] uppercase italic text-indigo-900 leading-tight">Yoga Sequencing Builder</h1>
-            <p class="text-[10px] text-stone-500 uppercase tracking-[0.3em] mt-1 font-bold">Elena y Mariateresa</p>
-        </div>
-        <div class="flex flex-col items-center w-full md:w-72 bg-white p-4 rounded-2xl shadow-sm border border-stone-200">
-            <div class="flex justify-between w-full mb-2 px-1">
-                <span class="text-[9px] font-black uppercase text-stone-400">Progreso</span>
-                <span class="text-[10px] font-black text-indigo-600"><span id="totalTime">0</span> / 60 MIN</span>
+    <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 no-print gap-6 border-b border-stone-200 pb-8">
+        <div class="flex items-center gap-6">
+            <div class="w-24 h-24 bg-indigo-950 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl overflow-hidden">
+                <img src="logo_grande.png" alt="YB" onerror="this.parentElement.innerHTML='YB'">
             </div>
-            <div class="w-full bg-stone-100 rounded-full h-3 overflow-hidden border border-stone-200">
-                <div id="progress-bar" class="bg-indigo-100 h-full w-0"></div>
+            <div>
+                <h1 class="text-3xl font-light tracking-tighter uppercase text-indigo-950">Yoga Sequence <span class="font-black italic">Builder</span></h1>
+                <p class="text-[10px] text-stone-400 uppercase tracking-[0.5em] font-bold mt-1">Elena y Mariateresa</p>
+            </div>
+        </div>
+        <div class="w-full md:w-72 bg-white p-5 rounded-2xl shadow-sm border border-stone-200">
+            <div class="flex justify-between mb-2 text-[10px] font-black uppercase text-stone-400 tracking-widest">
+                <span>Tiempo</span>
+                <span class="text-indigo-600"><span id="totalTime">0</span> / 60 MIN</span>
+            </div>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-stone-300 w-0"></div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <aside class="lg:col-span-1 space-y-6 no-print">
-            <section class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                <h2 class="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-4">Archivo</h2>
-                <div class="space-y-3">
-                    <input id="save-name" type="text" placeholder="Nombre de la clase..." class="w-full text-sm p-3 bg-stone-50 border-none rounded-xl outline-none focus:ring-1 focus:ring-indigo-300">
-                    <button onclick="saveToArchive()" class="w-full bg-indigo-600 text-white text-[10px] py-3 rounded-xl font-bold tracking-widest shadow-lg hover:bg-indigo-700">GUARDAR CLASE</button>
-                    <button onclick="resetApp()" class="w-full text-stone-400 text-[9px] py-1 font-bold hover:text-stone-600 uppercase">Nueva sesión</button>
-                </div>
-                <div class="mt-6 border-t pt-4"><ul id="archive-list" class="space-y-2 max-h-40 overflow-y-auto text-[11px]"></ul></div>
-            </section>
-            <section class="bg-white p-6 rounded-2xl border border-stone-200">
-                <h2 class="text-[10px] font-bold uppercase text-stone-400 mb-3 tracking-widest">Música</h2>
-                <input id="playlist-link" type="text" oninput="updatePlayer()" placeholder="Link YouTube o Spotify" class="w-full text-xs p-3 bg-stone-50 border rounded-xl outline-none mb-3">
-                <div id="video-container" class="rounded-lg overflow-hidden hidden shadow-inner"></div>
-            </section>
-        </aside>
-
-        <div class="lg:col-span-2 space-y-6">
-            <section class="bg-indigo-900 text-white p-7 rounded-3xl shadow-2xl print:bg-transparent print:text-black print:p-0 print:shadow-none">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <div class="lg:col-span-1 space-y-6 no-print">
+            <section class="bg-indigo-50/50 p-5 rounded-3xl border border-indigo-100 shadow-sm">
+                <h2 class="text-[10px] font-black uppercase tracking-widest text-indigo-900 mb-6 border-b border-indigo-100 pb-2">Metodología Lab</h2>
+                <div class="space-y-5">
                     <div>
-                        <label class="text-[9px] uppercase text-indigo-300 font-bold block mb-1">Enfoque Espiritual</label>
-                        <input id="focus-espiritual" type="text" class="w-full bg-indigo-800/40 border-none rounded-xl p-3 text-sm outline-none print:border-b">
+                        <div class="flex items-center gap-2 mb-2"><span class="step-number">1</span> <span class="text-[9px] font-black uppercase tracking-tight text-indigo-900">Objetivo Principal</span></div>
+                        <select id="method-type" class="w-full p-2 mb-2 bg-white border rounded-lg text-[10px] outline-none">
+                            <option value="peak">Postura Pico (Peak Pose)</option>
+                            <option value="family">Familia de Posturas</option>
+                        </select>
+                        <input id="target-name" type="text" placeholder="Nombre (Ej: Bakasana)" class="w-full p-2 bg-white border rounded-lg text-[10px] font-bold outline-none">
                     </div>
                     <div>
-                        <label class="text-[9px] uppercase text-indigo-300 font-bold block mb-1">Enfoque Físico</label>
-                        <input id="focus-fisico" type="text" class="w-full bg-indigo-800/40 border-none rounded-xl p-3 text-sm outline-none print:border-b">
+                        <div class="flex items-center gap-2 mb-2"><span class="step-number">2</span> <span class="text-[9px] font-black uppercase tracking-tight text-indigo-900">Apertura</span></div>
+                        <div class="flex flex-wrap gap-1 mb-2">
+                            <span class="check-pill" onclick="this.classList.toggle('active')">Isquios</span>
+                            <span class="check-pill" onclick="this.classList.toggle('active')">Hombros</span>
+                            <span class="check-pill" onclick="this.classList.toggle('active')">Caderas</span>
+                            <span class="check-pill" onclick="this.classList.toggle('active')">Psoas</span>
+                        </div>
+                        <textarea class="w-full p-2 text-[10px] bg-white border rounded-lg h-10 resize-none outline-none" placeholder="¿Qué estirar?"></textarea>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-2"><span class="step-number">3</span> <span class="text-[9px] font-black uppercase tracking-tight text-indigo-900">Estabilidad</span></div>
+                        <div class="flex flex-wrap gap-1 mb-2">
+                            <span class="check-pill" onclick="this.classList.toggle('active')">Core</span>
+                            <span class="check-pill" onclick="this.classList.toggle('active')">Glúteos</span>
+                            <span class="check-pill" onclick="this.classList.toggle('active')">Escápulas</span>
+                        </div>
+                        <textarea class="w-full p-2 text-[10px] bg-white border rounded-lg h-10 resize-none outline-none" placeholder="¿Qué activar?"></textarea>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-2"><span class="step-number">4</span> <span class="text-[9px] font-black uppercase tracking-tight text-indigo-900">Patrones Movimiento</span></div>
+                        <textarea class="w-full p-2 text-[10px] bg-white border rounded-lg h-12 resize-none outline-none" placeholder="Posturas que imitan el pico"></textarea>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-2"><span class="step-number">5</span> <span class="text-[9px] font-black uppercase tracking-tight text-indigo-900">Compensación final</span></div>
+                        <textarea id="ana-counter" class="w-full p-2 text-[10px] bg-white border rounded-lg h-10 resize-none outline-none" placeholder="Relajar tensiones..."></textarea>
                     </div>
                 </div>
-                <label class="text-[9px] uppercase text-indigo-300 font-bold block mb-1">Reflexión / Intención</label>
-                <textarea id="spiritual-intent" class="w-full bg-indigo-800/40 border-none rounded-xl p-3 text-sm h-16 resize-none outline-none mb-4 print:border-b"></textarea>
-                <label class="text-[9px] uppercase text-indigo-300 font-bold block mb-1">Postura Pico (Peak Pose)</label>
-                <input id="postura-pico-name" type="text" class="w-full bg-white/10 border-none rounded-xl p-3 text-sm font-bold text-indigo-100 outline-none print:text-black print:border-b">
             </section>
+            <section class="bg-white p-5 rounded-2xl border border-stone-200">
+                <h2 class="text-[10px] font-black uppercase tracking-widest text-stone-400 mb-3">Música</h2>
+                <input id="playlist-link" type="text" oninput="updatePlayer()" placeholder="Link YouTube o Spotify" class="w-full text-xs p-2 bg-stone-50 border rounded-lg outline-none mb-3">
+                <div id="video-container" class="rounded-lg overflow-hidden hidden shadow-inner border"></div>
+            </section>
+        </div>
 
-            <div id="builder" class="space-y-4"></div>
-
-            <div class="mt-8 space-y-4 no-print pb-10">
-                <button onclick="addNewBlock()" class="w-full py-4 border-2 border-dashed border-stone-300 rounded-2xl text-stone-400 text-[10px] font-bold hover:bg-white transition uppercase tracking-widest">+ AÑADIR FASE</button>
-                <button onclick="preparePrint()" class="w-full bg-stone-900 text-white py-5 rounded-2xl font-bold shadow-xl uppercase tracking-[0.3em] text-xs font-black">Descargar Guía PDF</button>
+        <div class="lg:col-span-3 space-y-4">
+            <div id="builder" class="space-y-3"></div>
+            <div class="flex flex-col md:flex-row gap-4 no-print pt-6 pb-20">
+                <button onclick="addNewBlock()" class="flex-1 py-4 border-2 border-dashed border-stone-300 rounded-2xl text-stone-400 text-[10px] font-black uppercase tracking-widest hover:bg-white transition">+ Nueva Fase</button>
+                <button onclick="window.print()" class="flex-1 bg-indigo-950 text-white py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-xl hover:bg-black transition">Generar PDF</button>
             </div>
         </div>
     </main>
 
-    <div class="print-only" style="margin-top: 50px; border-top: 1pt solid #eee; padding-top: 20px;">
-        <div style="display: flex; justify-between; font-size: 9pt; color: #777; font-style: italic;">
-            <p>Yoga Sequencing Builder - Elena y Mariateresa</p>
-            <p style="margin-left: auto;">Firma del Profesor: _________________________</p>
-        </div>
-    </div>
-
     <script>
         let currentBlocks = [
-            { title: "Introduction", min: 4, text: "- Bienvenida\n- Centramiento" },
-            { title: "Pranayama", min: 4 },
-            { title: "Warm up", min: 5 },
-            { title: "Surya Namaskar A", min: 10, text: "- Tadasana\n- Urdhva Hastasana\n- Uttanasana\n- Chaturanga\n- Urdhva Mukha\n- Adho Mukha" },
-            { title: "Surya Namaskar B", min: 10 },
-            { title: "Peak Pose & Balance", min: 12 },
-            { title: "Hip Opening", min: 6 },
-            { title: "Backbends", min: 6 },
-            { title: "Cool Down", min: 5 },
-            { title: "Savasana", min: 7 }
+            { title: "Introduction", min: 5, text: "" },
+            { title: "Pranayama", min: 5, text: "" },
+            { title: "Warm up", min: 8, text: "" },
+            { title: "Surya Namaskar", min: 10, text: "" },
+            { title: "Peak Pose Analysis", min: 12, counter: "", showCounter: true },
+            { title: "Cool Down", min: 10, counter: "", showCounter: true, text: "- Apanasana\n- Ananda Balasana\n- Jathara Parivartanasana" },
+            { title: "Savasana", min: 10, text: "" }
         ];
 
         function renderBlocks() {
@@ -124,29 +128,33 @@
             container.innerHTML = '';
             currentBlocks.forEach((b, i) => {
                 const div = document.createElement('div');
-                div.className = "block-item bg-white p-6 rounded-2xl border border-stone-200 relative shadow-sm";
+                div.className = "bg-white p-6 rounded-3xl border border-stone-200 shadow-sm relative block-item";
+                div.dataset.index = i;
                 div.innerHTML = `
-                    <div class="no-print drag-handle absolute -left-2 top-1/2 -translate-y-1/2 text-stone-300 px-2 cursor-grab">⋮⋮</div>
-                    <button onclick="removeBlock(${i})" class="no-print absolute -right-2 -top-2 bg-white text-stone-400 border rounded-full w-6 h-6 text-xs flex items-center justify-center hover:text-red-500 shadow-sm">×</button>
-                    
-                    <div class="flex justify-between items-start mb-2">
+                    <div class="flex justify-between items-start mb-4">
                         <div class="flex items-center gap-3">
-                            <span class="text-[10px] font-black text-indigo-300 print:text-black">#${(i+1).toString().padStart(2,'0')}</span>
-                            <input type="text" value="${b.title}" oninput="currentBlocks[${i}].title=this.value" class="text-xs font-black uppercase tracking-widest text-indigo-900 border-none p-0 outline-none print:text-[12pt]">
+                            <span class="no-print drag-handle text-stone-300 cursor-grab hover:text-indigo-400">⋮⋮</span>
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-black text-indigo-300 uppercase tracking-tighter">#${(i+1).toString().padStart(2,'0')} Phase</span>
+                                <input type="text" value="${b.title}" oninput="updateBlockData(${i}, 'title', this.value)" class="font-black uppercase text-xs tracking-widest text-indigo-950 border-none p-0 outline-none w-64 bg-transparent">
+                            </div>
                         </div>
-                        <div class="text-[10px] font-bold text-indigo-600 print:text-black">
-                            <span class="no-print"><input type="number" value="${b.min}" oninput="updateTime(${i}, this.value)" class="w-8 text-right outline-none"> min</span>
-                            <span class="print-only">${b.min} min</span>
+                        <div class="flex items-center gap-2">
+                            <input type="number" value="${b.min}" oninput="updateBlockData(${i}, 'min', this.value)" class="w-8 text-[10px] font-bold text-indigo-600 bg-stone-50 rounded p-1 outline-none no-print text-right">
+                            <span class="text-[10px] font-black text-stone-900 uppercase">${b.min} min</span>
                         </div>
                     </div>
-                    
-                    <textarea oninput="autoResize(this); updateText(${i}, this.value)" class="w-full text-sm p-0 bg-transparent border-none resize-none outline-none text-stone-600 leading-relaxed mb-3 font-mono" placeholder="- Postura 1\n- Postura 2...">${b.text || ''}</textarea>
-                    
-                    <div class="counter-box-app p-4 rounded-xl">
-                        <label class="text-[8px] font-black text-orange-500 uppercase tracking-widest block mb-1">COMPENSACIÓN</label>
-                        <div class="print-only counter-box-print">${b.counter || ''}</div>
-                        <input type="text" value="${b.counter || ''}" oninput="updateCounter(${i}, this.value)" class="no-print w-full bg-transparent text-[11px] italic text-stone-500 border-none p-0 outline-none" placeholder="Añade asana de contrapostura...">
-                    </div>
+                    <textarea oninput="autoResize(this); updateBlockData(${i}, 'text', this.value)" class="w-full text-sm p-0 border-none resize-none outline-none text-stone-600 leading-relaxed font-mono placeholder-stone-200" placeholder="- Escribe las asanas...">${b.text || ''}</textarea>
+                    ${b.showCounter ? `
+                        <div class="mt-4 p-4 bg-orange-50 rounded-2xl border border-orange-100 relative group">
+                            <label class="text-[8px] font-black text-orange-400 uppercase tracking-widest block mb-1">Compensación / Contrapostura</label>
+                            <input type="text" value="${b.counter || ''}" oninput="updateBlockData(${i}, 'counter', this.value)" class="w-full bg-transparent text-xs italic text-stone-600 border-none outline-none" placeholder="¿Qué postura relaja la tensión?">
+                            <button onclick="removeCounter(${i})" class="no-print absolute right-3 top-3 text-orange-200 hover:text-orange-500 font-bold text-xs opacity-0 group-hover:opacity-100 transition">×</button>
+                        </div>
+                    ` : `
+                        <button onclick="addCounter(${i})" class="no-print mt-3 text-[9px] font-bold text-stone-300 uppercase hover:text-orange-400 transition-colors">+ Añadir Compensación</button>
+                    `}
+                    <button onclick="removeBlock(${i})" class="no-print absolute -right-2 -top-2 w-7 h-7 bg-white border border-stone-100 rounded-full text-xs text-stone-300 hover:text-red-500 shadow-md flex items-center justify-center font-bold">×</button>
                 `;
                 container.appendChild(div);
                 autoResize(div.querySelector('textarea'));
@@ -154,13 +162,23 @@
             updateTotal();
         }
 
+        function updateBlockData(index, field, value) {
+            currentBlocks[index][field] = (field === 'min') ? (parseInt(value) || 0) : value;
+            if(field === 'min') updateTotal();
+        }
+
+        function addCounter(i) { currentBlocks[i].showCounter = true; renderBlocks(); }
+        function removeCounter(i) { currentBlocks[i].showCounter = false; currentBlocks[i].counter = ""; renderBlocks(); }
+        function removeBlock(i) { currentBlocks.splice(i, 1); renderBlocks(); }
+        function addNewBlock() { currentBlocks.push({ title: "Custom Phase", min: 5, text: "", showCounter: false }); renderBlocks(); }
+
         function updatePlayer() {
             const link = document.getElementById('playlist-link').value;
             const container = document.getElementById('video-container');
             if (link.includes('youtube.com') || link.includes('youtu.be')) {
                 let id = link.split('v=')[1] || link.split('/').pop();
                 if(id.includes('&')) id = id.split('&')[0];
-                container.innerHTML = `<iframe width="100%" height="150" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
+                container.innerHTML = `<iframe width="100%" height="150" src="https://www.youtube.com/embed/${id}" frameborder="0"></iframe>`;
                 container.classList.remove('hidden');
             } else { container.classList.add('hidden'); }
         }
@@ -171,54 +189,26 @@
             const bar = document.getElementById('progress-bar');
             let percentage = (total / 60) * 100;
             bar.style.width = Math.min(percentage, 100) + '%';
-            
-            if (total < 20) bar.style.backgroundColor = "#f5f5f4";
-            else if (total < 59) bar.style.backgroundColor = "#818cf8";
-            else bar.style.backgroundColor = "#22c55e"; 
+            bar.style.backgroundColor = total >= 60 ? "#22c55e" : "#818cf8";
         }
 
-        function autoResize(textarea) { textarea.style.height = 'auto'; textarea.style.height = textarea.scrollHeight + 'px'; }
-        new Sortable(document.getElementById('builder'), { animation: 150, handle: '.drag-handle', onEnd: (evt) => {
-            const item = currentBlocks.splice(evt.oldIndex, 1)[0];
-            currentBlocks.splice(evt.newIndex, 0, item);
-            renderBlocks();
-        }});
+        function autoResize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
 
-        function updateTime(i, val) { currentBlocks[i].min = parseInt(val) || 0; updateTotal(); }
-        function updateText(i, val) { currentBlocks[i].text = val; }
-        function updateCounter(i, val) { currentBlocks[i].counter = val; }
-        function addNewBlock() { currentBlocks.push({ title: "New Phase", min: 5, text: "" }); renderBlocks(); }
-        function removeBlock(i) { currentBlocks.splice(i, 1); renderBlocks(); }
-        function preparePrint() { 
-            document.getElementById('print-date').innerText = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-            window.print(); 
-        }
-        function saveToArchive() {
-            const name = document.getElementById('save-name').value || "Clase sin nombre";
-            const data = { name, esp: document.getElementById('focus-espiritual').value, fis: document.getElementById('focus-fisico').value, int: document.getElementById('spiritual-intent').value, pico: document.getElementById('postura-pico-name').value, blocks: currentBlocks, play: document.getElementById('playlist-link').value };
-            localStorage.setItem('yoga_v8', JSON.stringify([...JSON.parse(localStorage.getItem('yoga_v8') || '[]'), data]));
-            renderArchive();
-        }
-        function renderArchive() {
-            const list = document.getElementById('archive-list');
-            const archive = JSON.parse(localStorage.getItem('yoga_v8') || '[]');
-            list.innerHTML = archive.map((item, i) => `<li class="flex justify-between p-2 border-b"><button onclick="loadFromArchive(${i})" class="truncate w-full text-left font-medium hover:text-indigo-600">${item.name}</button></li>`).join('');
-        }
-        function loadFromArchive(i) {
-            const data = JSON.parse(localStorage.getItem('yoga_v8'))[i];
-            document.getElementById('focus-espiritual').value = data.esp;
-            document.getElementById('focus-fisico').value = data.fis;
-            document.getElementById('spiritual-intent').value = data.int;
-            document.getElementById('postura-pico-name').value = data.pico;
-            document.getElementById('playlist-link').value = data.play || '';
-            currentBlocks = data.blocks;
-            renderBlocks();
-            updatePlayer();
-        }
-        function resetApp() { if(confirm("¿Nueva clase?")) location.reload(); }
+        // CONFIGURACIÓN SORTABLE CON SINCRONIZACIÓN DE DATOS
+        new Sortable(document.getElementById('builder'), { 
+            handle: '.drag-handle', 
+            animation: 200,
+            onEnd: function (evt) {
+                const itemEl = evt.item;
+                // Movemos el elemento en el array de datos
+                const element = currentBlocks.splice(evt.oldIndex, 1)[0];
+                currentBlocks.splice(evt.newIndex, 0, element);
+                // Re-renderizamos para que los números #01, #02 se actualicen correctamente
+                renderBlocks();
+            }
+        });
 
         renderBlocks();
-        renderArchive();
     </script>
 </body>
 </html>

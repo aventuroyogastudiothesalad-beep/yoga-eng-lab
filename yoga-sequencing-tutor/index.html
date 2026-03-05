@@ -444,8 +444,13 @@
             });
 
             const filename = document.getElementById('target-name').value || "Yoga_Session";
-            //doc.save(`${filename.replace(/\s+/g, '_')}_Plan.pdf`);
-            doc.output('dataurlnewwindow'); // apre il PDF in un nuovo tab
+            // Apri in un nuovo tab
+            const pdfBlob = doc.output('blob');
+            const blobUrl = URL.createObjectURL(pdfBlob);
+            window.open(blobUrl, '_blank');
+
+// Scarica il PDF
+doc.save(`${filename.replace(/\s+/g, '_')}_Plan.pdf`);
         }
       function updatePlayer() {
     const container = document.getElementById('video-container');

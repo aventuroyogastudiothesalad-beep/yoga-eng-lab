@@ -492,14 +492,13 @@
             const autosave = JSON.parse(localStorage.getItem('yoga_autosave'));
             if (autosave) {
                 currentBlocks = autosave.blocks;
-                // En loadClass y window.onload
-                document.getElementById('meta-espiritual').value = data.meta.espiritual || '';
                 document.getElementById('method-type').value = autosave.meta.type || 'peak';
                 document.getElementById('target-name').value = autosave.meta.target || '';
                 document.getElementById('meta-apertura').value = autosave.meta.apertura || '';
                 document.getElementById('meta-estabilidad').value = autosave.meta.estabilidad || '';
                 document.getElementById('meta-patrones').value = autosave.meta.patrones || '';
                 document.getElementById('ana-counter').value = autosave.meta.counter || '';
+                document.getElementById('meta-espiritual').value = autosave.meta.espiritual || '';
                 (autosave.meta.pillsApertura || []).forEach(text => {
                     const p = Array.from(document.querySelectorAll('#pills-apertura .check-pill')).find(el => el.innerText === text);
                     if (p) p.classList.add('active');

@@ -138,6 +138,32 @@
                 width: 100% !important;
             }
         }
+
+        /* Ajuste para inputs de minutos en móvil */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+            /* Forzar que se vean las flechitas */
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+            min-width: 45px;
+            /* Evita que los minutos strabordano */
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Mejora visual para bloques en pantallas pequeñas */
+        @media (max-width: 640px) {
+            .block-item {
+                padding: 15px !important;
+            }
+
+            input[type="text"] {
+                width: 100% !important;
+            }
+        }
     </style>
 </head>
 

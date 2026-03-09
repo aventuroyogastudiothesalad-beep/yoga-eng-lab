@@ -9,136 +9,109 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        @media print {
-            .no-print {
-                display: none !important;
-            }
 
-            body {
-                background: white !important;
-                font-size: 10pt;
-                color: black;
-            }
+<style>
+    /* Importamos una fuente más redonda y amable */
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap');
 
-            #print-header {
-                display: flex !important;
-                align-items: center;
-                border-bottom: 2pt solid #000;
-                padding-bottom: 20px;
-                margin-bottom: 30px;
-            }
+    body {
+        background-color: #fdfafc; /* Un blanco con un toque rosado muy sutil */
+        font-family: 'Quicksand', sans-serif;
+    }
 
-            .block-item {
-                page-break-inside: avoid;
-                border-bottom: 1pt solid #eee !important;
-                padding: 15px 0 !important;
-            }
-        }
+    @media print {
+        .no-print { display: none !important; }
+        body { background: white !important; font-size: 10pt; color: black; }
+        #print-header { display: flex !important; align-items: center; border-bottom: 2pt solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+        .block-item { page-break-inside: avoid; border-bottom: 1pt solid #eee !important; padding: 15px 0 !important; }
+    }
 
-        .print-only {
-            display: none;
-        }
+    .print-only { display: none; }
+    .drag-handle { cursor: grab; color: #d8b4fe; } /* Flechitas en lila */
 
-        .drag-handle {
-            cursor: grab;
-        }
+    /* Paso a paso: Ahora son círculos lila suaves */
+    .step-number {
+        background: #f3e8ff; 
+        color: #7e22ce;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%; /* Redondos */
+        font-size: 11px;
+        font-weight: bold;
+        flex-shrink: 0;
+        box-shadow: 0 2px 4px rgba(126, 34, 206, 0.1);
+    }
 
-        .step-number {
-            background: #1e1b4b;
-            color: white;
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
+    #progress-bar {
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 20px;
+    }
 
-        #progress-bar {
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    /* Las etiquetas (pills) ahora son rosas */
+    .check-pill {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid #fce7f3;
+        font-size: 10px;
+        padding: 4px 10px;
+        border-radius: 15px;
+        background: white;
+        color: #9d174d;
+    }
 
-        .check-pill {
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid #e5e7eb;
-            font-size: 9px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            background: white;
-        }
+    .check-pill.active {
+        background: #fbcfe8; /* Rosa pastel */
+        color: #9d174d;
+        border-color: #f9a8d4;
+        transform: scale(1.05);
+    }
 
-        .check-pill.active {
-            background: #1e1b4b;
-            color: white;
-            border-color: #1e1b4b;
-        }
+    .library-item:hover .delete-btn { opacity: 1; }
 
-        .library-item:hover .delete-btn {
-            opacity: 1;
-        }
+    /* Los bloques ahora tienen bordes muy suaves y sombra rosa/lila */
+    .block-item {
+        background: white;
+        border-radius: 25px !important;
+        border: 2px solid #fdf2f8 !important;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-        .logo-container {
-            box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.4), 0 8px 10px -6px rgba(30, 27, 75, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+    .block-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px -5px rgba(244, 114, 182, 0.15);
+        border-color: #fbcfe8 !important;
+    }
 
-            /* Ajuste para inputs de minutos en móvil */
-            input[type=number]::-webkit-inner-spin-button,
-            input[type=number]::-webkit-outer-spin-button {
-                opacity: 1;
-                /* Forzar que se vean las flechitas */
-            }
+    .logo-container {
+        background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 100%);
+        box-shadow: 0 10px 25px -5px rgba(219, 39, 119, 0.2);
+        border: 2px solid white;
+        border-radius: 20px;
+    }
 
-            input[type=number] {
-                -moz-appearance: textfield;
-                appearance: textfield;
-                min-width: 45px;
-                /* Evita que los minutos strabordano */
-                border: 1px solid #e5e7eb;
-            }
+    /* Ajustes de inputs y móvil (Manteniendo tu funcionalidad) */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { opacity: 1; }
 
-            /* Mejora visual para bloques en pantallas pequeñas */
-            @media (max-width: 640px) {
-                .block-item {
-                    padding: 15px !important;
-                }
+    input[type=number] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+        min-width: 45px;
+        border: 1px solid #fce7f3;
+        border-radius: 8px;
+        background: #fff9fb;
+        color: #db2777;
+        font-weight: bold;
+    }
 
-                input[type="text"] {
-                    width: 100% !important;
-                }
-            }
-        }
-
-        /* Ajuste para inputs de minutos en móvil */
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            opacity: 1;
-            /* Forzar que se vean las flechitas */
-        }
-
-        input[type=number] {
-            -moz-appearance: textfield;
-            appearance: textfield;
-            min-width: 45px;
-            /* Evita que los minutos strabordano */
-            border: 1px solid #e5e7eb;
-        }
-
-        /* Mejora visual para bloques en pantallas pequeñas */
-        @media (max-width: 640px) {
-            .block-item {
-                padding: 15px !important;
-            }
-
-            input[type="text"] {
-                width: 100% !important;
-            }
-        }
-    </style>
+    @media (max-width: 640px) {
+        .block-item { padding: 20px !important; margin-bottom: 15px; }
+        input[type="text"] { width: 100% !important; font-size: 14px; }
+    }
+</style>
 </head>
 
 <body class="bg-stone-50 text-stone-800 font-sans p-4 md:p-8">

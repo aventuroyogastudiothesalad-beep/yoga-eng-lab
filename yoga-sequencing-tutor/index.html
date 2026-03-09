@@ -111,6 +111,27 @@
         .block-item { padding: 20px !important; margin-bottom: 15px; }
         input[type="text"] { width: 100% !important; font-size: 14px; }
     }
+
+    /* Pégalo aquí al final del bloque style */
+.yoga-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    /* Los colores: Rosa, Lila y Verde */
+    background: linear-gradient(to right, #f472b6, #a78bfa, #4ade80);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Un pequeño borde blanco para que resalte */
+    filter: drop-shadow(2px 2px 0px #fff);
+    letter-spacing: -1px;
+    /* La animación que lo hace bailar */
+    animation: wave 3s ease-in-out infinite;
+    display: inline-block; /* Importante para que la animación funcione bien */
+}
+
+@keyframes wave {
+    0%, 100% { transform: rotate(-2deg) scale(1); }
+    50% { transform: rotate(2deg) scale(1.05); }
+}
 </style>
 </head>
 

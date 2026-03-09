@@ -113,19 +113,21 @@
     }
 
     /* Pégalo aquí al final del bloque style */
+
 .yoga-title {
     font-size: 2.5rem;
     font-weight: 800;
-    /* Los colores: Rosa, Lila y Verde */
     background: linear-gradient(to right, #f472b6, #a78bfa, #4ade80);
-    -webkit-background-clip: text;
+    
+    /* Añade estas dos líneas juntas */
+    -webkit-background-clip: text; 
+    background-clip: text; 
+    
     -webkit-text-fill-color: transparent;
-    /* Un pequeño borde blanco para que resalte */
     filter: drop-shadow(2px 2px 0px #fff);
     letter-spacing: -1px;
-    /* La animación que lo hace bailar */
     animation: wave 3s ease-in-out infinite;
-    display: inline-block; /* Importante para que la animación funcione bien */
+    display: inline-block;
 }
 
 @keyframes wave {

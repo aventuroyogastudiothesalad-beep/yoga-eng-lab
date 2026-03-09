@@ -492,8 +492,6 @@
             const autosave = JSON.parse(localStorage.getItem('yoga_autosave'));
             if (autosave) {
                 currentBlocks = autosave.blocks;
-                // En loadClass y window.onload
-                document.getElementById('meta-espiritual').value = data.meta.espiritual || '';              
                 document.getElementById('method-type').value = autosave.meta.type || 'peak';
                 document.getElementById('target-name').value = autosave.meta.target || '';
                 document.getElementById('meta-apertura').value = autosave.meta.apertura || '';
@@ -555,7 +553,6 @@
             y += 8;
 
             const headerInfo = [
-                
                 { label: "TARGET / PICO", value: document.getElementById('target-name').value || "No especificado" },
                 { label: "APERTURA", value: document.getElementById('meta-apertura').value || "No especificado" },
                 { label: "ESTABILIDAD", value: document.getElementById('meta-estabilidad').value || "No especificado" },

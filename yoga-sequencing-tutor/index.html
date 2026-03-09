@@ -134,6 +134,135 @@
     0%, 100% { transform: rotate(-2deg) scale(1); }
     50% { transform: rotate(2deg) scale(1.05); }
 }
+
+<style>
+    /* 1. Importamos la fuente 'Quicksand', más redonda y amable */
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800&display=swap');
+
+    body {
+        background-color: #fdfafc; /* Un blanco con un toque rosado muy sutil */
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    /* 2. DISEÑO DE IMPRESIÓN (MANTENIDO EXACTAMENTE IGUAL) */
+    @media print {
+        .no-print { display: none !important; }
+        body { background: white !important; font-size: 10pt; color: black; }
+        #print-header { display: flex !important; align-items: center; border-bottom: 2pt solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+        .block-item { page-break-inside: avoid; border-bottom: 1pt solid #eee !important; padding: 15px 0 !important; }
+    }
+
+    .print-only { display: none; }
+    .drag-handle { cursor: grab; color: #d8b4fe; } /* Flechitas en lila */
+
+    /* 3. TÍTULO ANIMADO CON COLORES VIVOS Y COMPATIBILIDAD */
+    .yoga-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        /* Gradiente Rosa -> Lila -> Verde Menta */
+        background: linear-gradient(to right, #f472b6, #a78bfa, #4ade80);
+        
+        /* Compatibilidad para background-clip text */
+        -webkit-background-clip: text; 
+        background-clip: text; 
+        
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(2px 2px 0px #fff); /* Borde blanco para resaltar */
+        letter-spacing: -1px;
+        animation: wave 3s ease-in-out infinite;
+        display: inline-block;
+    }
+
+    @keyframes wave {
+        0%, 100% { transform: rotate(-2deg) scale(1); }
+        50% { transform: rotate(2deg) scale(1.05); }
+    }
+
+    /* 4. PASO A PASO: Ahora son círculos lila suaves */
+    .step-number {
+        background: #f3e8ff; /* Lila pastel */
+        color: #7e22ce; /* Violeta */
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%; /* Redondos */
+        font-size: 11px;
+        font-weight: bold;
+        flex-shrink: 0;
+        box-shadow: 0 2px 4px rgba(126, 34, 206, 0.1);
+    }
+
+    /* 5. BARRA DE PROGRESO (MANTENER ESTRUCTURA, COLORES EN JS) */
+    #progress-bar {
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 20px;
+    }
+
+    /* 6. ETIQUETAS (PILLS) ROSAS Y DIVERTIDAS */
+    .check-pill {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid #fce7f3;
+        font-size: 10px;
+        padding: 4px 10px;
+        border-radius: 15px;
+        background: white;
+        color: #9d174d; /* Rosa oscuro */
+    }
+
+    .check-pill.active {
+        background: #fbcfe8; /* Rosa pastel */
+        color: #9d174d;
+        border-color: #f9a8d4;
+        transform: scale(1.05);
+    }
+
+    .library-item:hover .delete-btn { opacity: 1; }
+
+    /* 7. BLOQUES CON BORDES MUY SUAVES Y SOMBRA "ZEN" */
+    .block-item {
+        background: white;
+        border-radius: 25px !important; /* Más redondeado */
+        border: 2px solid #fdf2f8 !important; /* Borde rosa sutil */
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .block-item:hover {
+        transform: translateY(-3px); /* Pequeño salto 'pop' */
+        box-shadow: 0 10px 20px -5px rgba(244, 114, 182, 0.15); /* Sombra rosa suave */
+        border-color: #fbcfe8 !important; /* Rosa más intenso en hover */
+    }
+
+    /* 8. CONTENEDOR LOGO SIMPÁTICO Y LUMINOSO */
+    .logo-container {
+        background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 100%);
+        box-shadow: 0 10px 25px -5px rgba(219, 39, 119, 0.2);
+        border: 2px solid white;
+        border-radius: 20px;
+    }
+
+    /* 9. AJUSTES DE INPUTS Y MÓVIL (MANTENIDO EXACTAMENTE IGUAL) */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { opacity: 1; }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+        min-width: 45px;
+        border: 1px solid #fce7f3;
+        border-radius: 8px;
+        background: #fff9fb;
+        color: #db2777; /* Color chicle en los números */
+        font-weight: bold;
+    }
+
+    @media (max-width: 640px) {
+        .block-item { padding: 20px !important; margin-bottom: 15px; }
+        input[type="text"] { width: 100% !important; font-size: 14px; }
+    }
+</style>
 </style>
 </head>
 

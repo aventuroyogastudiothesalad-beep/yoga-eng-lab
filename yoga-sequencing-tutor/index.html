@@ -85,6 +85,58 @@
         .logo-container {
             box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.4), 0 8px 10px -6px rgba(30, 27, 75, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
+
+            /* Ajuste para inputs de minutos en móvil */
+            input[type=number]::-webkit-inner-spin-button,
+            input[type=number]::-webkit-outer-spin-button {
+                opacity: 1;
+                /* Forzar que se vean las flechitas */
+            }
+
+            input[type=number] {
+                -moz-appearance: textfield;
+                appearance: textfield;
+                min-width: 45px;
+                /* Evita que los minutos strabordano */
+                border: 1px solid #e5e7eb;
+            }
+
+            /* Mejora visual para bloques en pantallas pequeñas */
+            @media (max-width: 640px) {
+                .block-item {
+                    padding: 15px !important;
+                }
+
+                input[type="text"] {
+                    width: 100% !important;
+                }
+            }
+        }
+
+        /* Ajuste para inputs de minutos en móvil */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+            /* Forzar que se vean las flechitas */
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+            min-width: 45px;
+            /* Evita que los minutos strabordano */
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Mejora visual para bloques en pantallas pequeñas */
+        @media (max-width: 640px) {
+            .block-item {
+                padding: 15px !important;
+            }
+
+            input[type="text"] {
+                width: 100% !important;
+            }
         }
     </style>
 </head>

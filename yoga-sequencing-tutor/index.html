@@ -394,6 +394,7 @@
             const currentSession = {
                 blocks: currentBlocks,
                 meta: {
+                    espiritual: document.getElementById('meta-espiritual').value,
                     type: document.getElementById('method-type').value,
                     target: document.getElementById('target-name').value,
                     apertura: document.getElementById('meta-apertura').value,
@@ -457,6 +458,8 @@
             const data = library[name];
             if (!data) return;
             currentBlocks = data.blocks;
+            // En loadClass y window.onload
+            document.getElementById('meta-espiritual').value = data.meta.espiritual || '';
             document.getElementById('method-type').value = data.meta.type;
             document.getElementById('target-name').value = data.meta.target;
             document.getElementById('meta-apertura').value = data.meta.apertura;
@@ -489,6 +492,8 @@
             const autosave = JSON.parse(localStorage.getItem('yoga_autosave'));
             if (autosave) {
                 currentBlocks = autosave.blocks;
+                // En loadClass y window.onload
+                document.getElementById('meta-espiritual').value = data.meta.espiritual || '';              
                 document.getElementById('method-type').value = autosave.meta.type || 'peak';
                 document.getElementById('target-name').value = autosave.meta.target || '';
                 document.getElementById('meta-apertura').value = autosave.meta.apertura || '';
